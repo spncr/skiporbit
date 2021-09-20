@@ -13,11 +13,12 @@ local input = Baton.new {
 }
 
 local camera = Gamera.new(0, 0, 10000, 10000)
+local world = {}
+local background = love.graphics.newImage('stars.jpg')
 
 function love.load()
   love.graphics.setDefaultFilter( 'nearest', 'nearest' )
-  camera:setScale(2)
-
+  world.l, world.t, world.w, world.h = camera:getWorld()
   ship = Ship()
 end
 
@@ -25,12 +26,14 @@ function love.update(dt)
   input:update()
   ship:update(
     {
-      left = input:get 'left',
-      right = input:get 'right',
-      go = input:get 'go'
+      left = input:down 'left',
+      right = input:down 'right',
+      go = input:down 'go'
     },
+    world,
     dt
   )
+
   camera:setPosition(ship.position.x, ship.position.y)
 end
 
@@ -42,7 +45,6 @@ function love.draw()
 end
 
 function tiledBackgroundDraw()
-  local background = love.graphics.newImage('stars.jpg')
   local bg_width, bg_height = background:getDimensions() -- width, height
   local left, top, width, height = camera:getWorld()
   local x_reps = math.ceil(width / bg_width)
