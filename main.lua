@@ -12,7 +12,7 @@ local input = Baton.new {
   }
 }
 
-local camera = Gamera.new(0, 0, 10000, 10000)
+local camera = Gamera.new(0, 0, 100000, 100000)
 local world = {}
 local background = love.graphics.newImage('stars.jpg')
 
@@ -45,6 +45,8 @@ function love.draw()
 end
 
 function tiledBackgroundDraw()
+  love.graphics.setColor(1, 1, 1, .6)
+
   local bg_width, bg_height = background:getDimensions() -- width, height
   local left, top, width, height = camera:getWorld()
   local x_reps = math.ceil(width / bg_width)
@@ -57,5 +59,14 @@ function tiledBackgroundDraw()
       love.graphics.draw(background, x, y )
     end
   end
+end
 
+function sign(number)
+  return number > 0 and 1
+     or  number < 0 and -1
+     or  0
+end
+
+function approach(start, goal, shift)
+  return start < goal and math.min(start + shift, goal) or math.max(start - shift, goal)
 end
